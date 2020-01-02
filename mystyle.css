@@ -1,0 +1,69 @@
+@charset "utf-8";
+/* CSS Document */
+/*** This definition is a MUST, with ATLEAST overflow:hidden; **/
+.viewwindow {
+	border:1px solid;
+	overflow:hidden;
+}
+
+/*** This definition is a MUST. DONT TAMPER WITH THIS **/
+.fulldisplayplate
+{
+	position:relative;
+	width:200%;
+	height:100%;
+	left:0px;
+}
+
+/*** This definition is a MUST. DONT TAMPER WITH THIS **/
+.eachdisplay, .frontjumper, .backjumper
+{
+	border:1px solid;
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:80%;
+	height:100%;
+	text-align:center;
+	vertical-align:center;
+}
+
+.theBigLeft
+{
+	float:left;
+	width:68%;
+}
+
+.theBigRight
+{
+	float:right;
+	width:30%;
+}
+
+.zurichimages
+{
+	min-height:700px;
+}
+
+.genevaimages
+{
+	min-height:300px;
+}
+
+.fulldisplayplate, .eachdisplay, .frontjumper, .backjumper
+{
+	background:#8DE9D7;
+}
+
+
+.eachdisplay img
+{
+	cursor:pointer;
+}
+
+.thedescription
+{
+	border:1px solid;
+	float:right;
+	width:30%;
+}
