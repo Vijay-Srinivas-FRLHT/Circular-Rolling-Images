@@ -19,12 +19,19 @@ $SomeArrayTakenFromDatabaseZ = Array(
 	Array("imageurlid" => "zurich/z11.jpg", "imagedescription" => "Eleventh zurich image"),
 	Array("imageurlid" => "zurich/z12.jpg", "imagedescription" => "Twelfth zurich image")
 );
+$SomeArrayTakenFromDatabaseG = Array(
+	Array("imageurlid" => "geneva/g1.jpg", "imagedescription" => "First geneva image"),
+	Array("imageurlid" => "geneva/g2.jpg", "imagedescription" => "Second geneva image"),
+	Array("imageurlid" => "geneva/g3.jpg", "imagedescription" => "Third geneva image"),
+	Array("imageurlid" => "geneva/g4.jpg", "imagedescription" => "Fourth geneva image")
+);
 ?>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
-<script src="../AllJqueries/jquery-1.11.3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 /*** Variables for Zurich Image Width/Height and Geneva Image Width/Height are defined below. These can be changed/increased/decreased as per requirement ***/
 var zurichImagesWidth, zurichImagesHeight;
+var genevaImagesWidth, genevaImagesHeight;
 
 var imgSriniPointer = new Object(), maxNoOfDisplayBoxes = new Object(), frontJumperImageNo = new Object(), backJumperImageNo = new Object(), FRONT_JUMPER_POSITION=0, BACK_JUMPER_POSITION = new Object();
 var INNER_VERTICAL_MARGIN = 0.05;
@@ -32,11 +39,10 @@ var INNER_HORIZONTAL_MARGIN = 0.05;
 var DURATION = 300;
 var MAX_NO_OF_IMAGE_BOXES_PERMISSIBLE_EITHER_DIRECTION = 5;
 var MAX_NO_OF_IMAGE_BOXES_PERMISSIBLE = MAX_NO_OF_IMAGE_BOXES_PERMISSIBLE_EITHER_DIRECTION * 2 - 1;
-var EACH_GROUP_NO_OF_IMAGES = 3;
 var theVar = 0;
 
 /*** Here in imgSriniCounter, we have initialized the object in terms of zurichimages, genevaimages. These can also be changed. But the class name etc everywhere needs to be mentioned the same. */
-var imgSriniCounter= {zurichimages:0};
+var imgSriniCounter= {zurichimages:0, genevaimages:0};
 
 /*** Pushing all the Zurich Images. Again, changes can apply ***/
 var allTheZurichImages = new Array();
@@ -53,12 +59,33 @@ $objectToPush = str_replace(", TheEnd", "", $objectToPush);
 allTheZurichImages.push({<?php echo $objectToPush; ?>});
 <?php endforeach; ?>
 
+/*** Pushing all the Geneva Images. Again, changes can apply, and this may not be there also, if only one rolling images are there. ***/
+var allTheGenevaImages = new Array();
+<?php foreach($SomeArrayTakenFromDatabaseG as $dbkey => $dbval): ?>
+<?php
+$objectToPush = "";
+foreach($dbval as $eachindikey => $eachindival)
+{
+	$objectToPush .= $eachindikey.":\"".$eachindival."\", ";
+}
+$objectToPush .= "TheEnd";
+$objectToPush = str_replace(", TheEnd", "", $objectToPush);
+?>
+allTheGenevaImages.push({<?php echo $objectToPush; ?>});
+<?php endforeach; ?>
+
+
 $(document).ready(function() {
 	zurichImagesWidth = $(".zurichimages").width();
 	zurichImagesHeight = $(".zurichimages").height();
 	
 	putFullHtml("zurichimages", allTheZurichImages, zurichImagesWidth, zurichImagesHeight);
 	
+	genevaImagesWidth = $(".genevaimages").width();
+	genevaImagesHeight = $(".genevaimages").height();
+	
+	putFullHtml("genevaimages", allTheGenevaImages, genevaImagesWidth, genevaImagesHeight);
+
 	$("#backward").click(function() {
 		rollImages("backward", "zurichimages", zurichImagesWidth, allTheZurichImages);	
 	});
@@ -66,6 +93,13 @@ $(document).ready(function() {
 		rollImages("forward", "zurichimages", zurichImagesWidth, allTheZurichImages);	
 	});
 	
+	$("#backwardg").click(function() {
+		rollImages("backward", "genevaimages", genevaImagesWidth, allTheGenevaImages);	
+	});
+	$("#forwardg").click(function() {
+		rollImages("forward", "genevaimages", genevaImagesWidth, allTheGenevaImages);	
+	});
+
 	$(".viewwindow .fulldisplayplate").on("click", "img", function() {
 		var theImageSource = $(this).parent().find("div.imagedescription").html();
 		alert(theImageSource);
@@ -81,7 +115,7 @@ function putFullHtml(specificClass, allTheImages, viewWindowWidth, viewWindowHei
 	if(noOfSriniImages + 2 >= MAX_NO_OF_IMAGE_BOXES_PERMISSIBLE)
 	{
 		maxNoOfImageBoxes = MAX_NO_OF_IMAGE_BOXES_PERMISSIBLE;
-		imgSriniPointer[specificClass] = Math.ceil((maxNoOfImageBoxes - 2) / EACH_GROUP_NO_OF_IMAGES);
+		imgSriniPointer[specificClass] = Math.ceil((maxNoOfImageBoxes - 2) / 3);
 	}
 	else
 	{
@@ -108,7 +142,7 @@ function putFullHtml(specificClass, allTheImages, viewWindowWidth, viewWindowHei
 	fullDisplayPlateWidth = viewWindowWidth * maxNoOfImageBoxes;
 	fullDisplayPlateHeight = viewWindowHeight;
 	$("." + specificClass + " .fulldisplayplate").css({"width":fullDisplayPlateWidth, "height":fullDisplayPlateHeight});
-	eachDisplayWidth = viewWindowWidth * (1 - 2 * INNER_HORIZONTAL_MARGIN) / 3;
+	eachDisplayWidth = viewWindowWidth * (1 - 2 * INNER_HORIZONTAL_MARGIN);
 	eachDisplayHeight = viewWindowHeight * (1 - 2 * INNER_VERTICAL_MARGIN);
 	eachDisplayTop = viewWindowHeight * INNER_VERTICAL_MARGIN;
 	$("." + specificClass + " .eachdisplay").css({width:eachDisplayWidth, height:eachDisplayHeight});	
@@ -221,6 +255,16 @@ function rollImages(direction, specificClass, viewWindowWidth, allTheImages)
 </div>
 
 <div class="theBigRight">    
+<!-- This is a set for Geneva -->    
+    <div class="viewwindow genevaimages">
+    	<div class="fulldisplayplate">
+    	</div>
+    </div>
+
+    <div class="buttonplaceg">
+    <button id="backwardg" style="float:left">Backward</button>&nbsp;<button id="forwardg" style="float:right">Forward</button>
+    </div>
+    <div style="clear:both"></div>
 </div>
  
  </body>
