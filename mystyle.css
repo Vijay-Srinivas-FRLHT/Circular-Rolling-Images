@@ -18,7 +18,6 @@
 /*** This definition is a MUST. DONT TAMPER WITH THIS **/
 .eachdisplay, .frontjumper, .backjumper
 {
-	border:1px solid;
 	position:absolute;
 	left:0px;
 	top:0px;
